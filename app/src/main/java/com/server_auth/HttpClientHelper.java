@@ -46,7 +46,6 @@ public class HttpClientHelper extends AsyncTask<Void, Void, Boolean> {
 
     @Override
     protected Boolean doInBackground(Void... params) {
-        // TODO: attempt authentication against a network service.
         if (this.customDoInBackground == null) {
             try {
                 if (this.httpMethod.equals(HttpClientHelper.GET)){
