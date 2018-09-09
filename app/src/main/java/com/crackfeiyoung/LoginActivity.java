@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void doCallback(String result) {
                     showProgress(false);
-                    Snackbar.make(mLoginFormView, "拨号失败" + NetLogin.errMsg, Snackbar.LENGTH_LONG)
+                    Snackbar.make(mLoginFormView, "拨号失败" + NetLogin.sErrMsg, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
 //                    mPasswordView.setError(getString(R.string.error_incorrect_password));
 //                    mPasswordView.requestFocus();

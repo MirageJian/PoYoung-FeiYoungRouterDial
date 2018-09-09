@@ -1,7 +1,5 @@
 package com.feiyoung;
 
-import com.server_auth.HttpClientHelper;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -10,22 +8,20 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NetLogin {
-    private static String cookies = "";
-    public static String errMsg = "";
+    private static String sCookies = "";
+    public static String sErrMsg = "";
 
     public String doLogin(String... info) {
 //        get login url
         String loginUrl = getLoginUrl();
         if (loginUrl == null) {
             if (testConnection())
-                return FeiyoungServer.TestConnetUrl;
+                return FeiyoungServer.TEST_CONNECT_URL;
             return null;
         }
 //        encrypt info
@@ -42,7 +38,7 @@ public class NetLogin {
         int timeoutTime = 2000;
         try {
             //设置url
-            URL url = new URL(FeiyoungServer.RedirectUrl);
+            URL url = new URL(FeiyoungServer.REDIRECT_URL);
             //打开链接
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("User-Agent", FeiyoungServer.getAppUa());
@@ -51,7 +47,7 @@ public class NetLogin {
             connection.connect();
             //取得响应头
             //写入cookies
-            cookies = connection.getHeaderField("Set-Cookie");
+            sCookies = connection.getHeaderField("Set-Cookie");
             //获取数据的变量 //设置读取文件的编码格式和读取文件
             BufferedReader inData = new BufferedReader(new InputStreamReader(
                     connection.getInputStream(), "UTF-8"
@@ -73,7 +69,7 @@ public class NetLogin {
         } else {
             Matcher matcher1 = Pattern.compile("<ReplyMessage>([^<]+)</ReplyMessage>").matcher(result);
             if (matcher1.find()) {
-                errMsg =  matcher1.group(1);
+                sErrMsg =  matcher1.group(1);
             }
             return null;
         }
@@ -81,7 +77,7 @@ public class NetLogin {
 
     private boolean testConnection() {
         try {
-            URL url = new URL(FeiyoungServer.TestConnetUrl);
+            URL url = new URL(FeiyoungServer.TEST_CONNECT_URL);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             //获取数据的变量 //设置读取文件的编码格式和读取文件
@@ -115,11 +111,11 @@ public class NetLogin {
         try {
             URL url = new URL(loginUrl);//设置url
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-//            connection.setRequestProperty("Cookie", DeviceParams.cookies);
+//            connection.setRequestProperty("Cookie", DeviceParams.sCookies);
             connection.setRequestMethod("POST");
             connection.setDoInput(true);
             connection.setDoOutput(true);
-            connection.setRequestProperty("Cookie", cookies);
+            connection.setRequestProperty("Cookie", sCookies);
             connection.setRequestProperty("User-Agent", FeiyoungServer.getAppUa());
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             connection.setRequestProperty("ClientVersion", FeiyoungServer.getAppVersion());
@@ -151,7 +147,7 @@ public class NetLogin {
         } else {
             Matcher matcher1 = Pattern.compile("<ReplyMessage>([^<]+)</ReplyMessage>").matcher(result);
             if (matcher1.find()) {
-                errMsg =  matcher1.group(1);
+                sErrMsg =  matcher1.group(1);
             }
             return null;
         }
@@ -162,7 +158,7 @@ public class NetLogin {
         try {
             URL url = new URL(logoutUrl);//设置url
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-            connection.setRequestProperty("Cookie", cookies);
+            connection.setRequestProperty("Cookie", sCookies);
             connection.setRequestProperty("User-Agent", FeiyoungServer.getAppUa());
             connection.setRequestProperty("ClientVersion", FeiyoungServer.getAppVersion());
             connection.connect();

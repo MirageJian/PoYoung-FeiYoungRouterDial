@@ -8,8 +8,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Build
-import android.os.Handler
-import android.os.Message
 import android.support.design.widget.Snackbar
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -35,12 +33,11 @@ class AuthActivity : AppCompatActivity() {
     private var mProgress: View? = null//处理动画
     private var mStart: Button? = null//开始
     private var mView: View? = null
-    private var imei: String? = null
+    private var mImei: String? = null
     private var mAuthButon: Button? = null
     private var mPreferences: SharedPreferences? = null
-    private var username: String? = null
-    private var imei_text: EditText? = null
-    private var updateDialog: AlertDialog? = null
+    private var mUsername: String? = null
+    private var mImei_text: EditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +53,12 @@ class AuthActivity : AppCompatActivity() {
 
         mView = findViewById(R.id.auth_view)
         mProgress = findViewById(R.id.pro_guide)
-        imei_text = findViewById(R.id.imei_text)
+        mImei_text = findViewById(R.id.imei_text)
         // 按钮初始化，设置监听
         mStart = findViewById(R.id.btn_start)
         mStart!!.setOnClickListener {
             val intent = Intent(this@AuthActivity, LoginActivity::class.java)
-            intent.putExtra("username", username)
+            intent.putExtra("username", mUsername)
             this@AuthActivity.startActivity(intent)
         }
         mAuthButon = findViewById(R.id.btn_auth)
@@ -88,14 +85,14 @@ class AuthActivity : AppCompatActivity() {
         if (requestCode == 0x12) {
             val tel = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             try {
-                imei = tel.deviceId
+                mImei = tel.deviceId
 
             } catch (ex: SecurityException) {
                 ex.printStackTrace()
-                imei = "null"
+                mImei = "null"
             }
 
-            imei_text!!.setText(imei)
+            mImei_text!!.setText(mImei)
         } else {
             finish()
         }
@@ -108,14 +105,14 @@ class AuthActivity : AppCompatActivity() {
         } else {
             val tel = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             try {
-                imei = tel.deviceId
+                mImei = tel.deviceId
 
             } catch (ex: SecurityException) {
                 ex.printStackTrace()
-                imei = "null"
+                mImei = "null"
             }
 
-            imei_text!!.setText(imei)
+            mImei_text!!.setText(mImei)
         }
     }
 
@@ -158,10 +155,10 @@ class AuthActivity : AppCompatActivity() {
 
         override fun doInBackground(vararg params: Void): String? {
             val result: String?
-            val param = "?imei=" + imei!!
+            val param = "?imei=" + mImei!!
             try {
                 println(param)
-                result = sendGet(AuthServer.AuthHost + param)
+                result = sendGet(AuthServer.AUTH_HOST + param)
                 return result
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -189,7 +186,7 @@ class AuthActivity : AppCompatActivity() {
                 showProcessBar(false)
                 showStart(true)
                 // 设置启动参数
-                username = success
+                mUsername = success
                 val editor = mPreferences!!.edit()
                 editor.putString("new_app", "true")
                 editor.apply()
@@ -218,23 +215,23 @@ class AuthActivity : AppCompatActivity() {
     private fun checkUpgrade() {
         val params = HashMap<String, String>()
         params["imei"] = "apk"
-        HttpClientHelper().setUrl(AuthServer.AuthHost)
+        HttpClientHelper().setUrl(AuthServer.AUTH_HOST)
                 .setMethod(HttpClientHelper.GET)
                 .setParams(params)
                 .setSuccessCallback { result ->
-                    if (result != "/PoYoung" + AuthServer.Version + ".apk") {
+                    if (result != "/PoYoung" + AuthServer.version + ".apk") {
                         showProcessBar(false)
                         showStart(false)
                         // 设置启动参数
                         val editor = mPreferences!!.edit()
                         editor.putString("new_app", "false")
                         editor.apply()
-                        AuthServer.ApkName = result
+                        AuthServer.apkName = result
                         AlertDialog.Builder(this@AuthActivity).setTitle("新版本")
                                 .setMessage("破样发布了新的版本，请更新")
                                 .setCancelable(false)
                                 .setPositiveButton("好") { dialogInterface, i ->
-                                    val uri = Uri.parse(AuthServer.FileHost + AuthServer.ApkName)
+                                    val uri = Uri.parse(AuthServer.FILE_HOST + AuthServer.apkName)
                                     val intent = Intent(Intent.ACTION_VIEW, uri)
                                     startActivity(intent)
                                  }

@@ -28,8 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LogoutActivity extends AppCompatActivity {
-    private String logoutUrl;
-    private Dialog dialog;
+    private String mLogoutUrl;
+    private Dialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class LogoutActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        logoutUrl = getIntent().getStringExtra("logoutUrl");
+        mLogoutUrl = getIntent().getStringExtra("logoutUrl");
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +54,7 @@ public class LogoutActivity extends AppCompatActivity {
     private void getPreferences() {
         // read info from Extra param
         String clientip = null;
-        Matcher matcher= Pattern.compile("wlanuserip=([^&]+)").matcher(logoutUrl);
+        Matcher matcher= Pattern.compile("wlanuserip=([^&]+)").matcher(mLogoutUrl);
         if (matcher.find()){
             clientip = matcher.group(1);
         }
@@ -64,12 +64,12 @@ public class LogoutActivity extends AppCompatActivity {
         if (clientip == null) {
             clientip = preferences.getString("clientip", "无历史ip");
             clientip = "网络畅通，无需拨号，历史ip：".concat(clientip);
-            logoutUrl = preferences.getString("logoutUrl", null);
+            mLogoutUrl = preferences.getString("logoutUrl", null);
             tv.setText(clientip);
         } else {
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString("clientip", clientip);
-            editor.putString("logoutUrl", logoutUrl);
+            editor.putString("logoutUrl", mLogoutUrl);
             editor.apply();
             tv.setText(clientip);
         }
@@ -78,7 +78,7 @@ public class LogoutActivity extends AppCompatActivity {
     // send login info
     private void sendInfoToAuth(){
         HashMap<String, String> params = new HashMap<>();
-        params.put("ip", logoutUrl);
+        params.put("ip", mLogoutUrl);
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
                 TelephonyManager tel = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -90,7 +90,7 @@ public class LogoutActivity extends AppCompatActivity {
             ex.printStackTrace();
             params.put("imei", null);
         }
-        new HttpClientHelper().setUrl(AuthServer.RecorderHost)
+        new HttpClientHelper().setUrl(AuthServer.RECORDER_HOST)
                 .setMethod(HttpClientHelper.POST)
                 .setParams(params)
                 .doTask();
@@ -99,21 +99,21 @@ public class LogoutActivity extends AppCompatActivity {
     private void checkUpgrade(){
         HashMap<String, String> params = new HashMap<>();
         params.put("imei", "apk");
-        new HttpClientHelper().setUrl(AuthServer.AuthHost)
+        new HttpClientHelper().setUrl(AuthServer.AUTH_HOST)
                 .setMethod(HttpClientHelper.GET)
                 .setParams(params)
                 .setSuccessCallback(new HttpClientHelper.HttpCallback() {
                     @Override
                     public void doCallback(String result) {
-                        if (!result.equals("/PoYoung"+AuthServer.Version+".apk")) {
-                            AuthServer.ApkName = result;
-                            dialog = new AlertDialog.Builder(LogoutActivity.this).setTitle("新版本")
+                        if (!result.equals("/PoYoung"+AuthServer.version +".apk")) {
+                            AuthServer.apkName = result;
+                            mDialog = new AlertDialog.Builder(LogoutActivity.this).setTitle("新版本")
                                     .setMessage("破样发布了新的版本，请使用其他网络环境更新")
                                     .setCancelable(false)
                                     .setPositiveButton("好", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            Uri uri = Uri.parse(AuthServer.FileHost+AuthServer.ApkName);
+                                            Uri uri = Uri.parse(AuthServer.FILE_HOST +AuthServer.apkName);
                                             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                                             startActivity(intent);
                                             finish();
@@ -125,7 +125,7 @@ public class LogoutActivity extends AppCompatActivity {
                                             finish();
                                         }
                                     }).create();
-                            dialog.show();
+                            mDialog.show();
                             LogoutActivity.this.doLogout(null);
                         }
                     }
@@ -133,7 +133,7 @@ public class LogoutActivity extends AppCompatActivity {
                 .setErrorCallback(new HttpClientHelper.HttpCallback() {
                     @Override
                     public void doCallback(String result) {
-                        dialog = new AlertDialog.Builder(LogoutActivity.this).setTitle("出错")
+                        mDialog = new AlertDialog.Builder(LogoutActivity.this).setTitle("出错")
                                 .setMessage("链接验证服务器失败")//设置显示的内容
                                 .setCancelable(false)
                                 .setPositiveButton("好", new DialogInterface.OnClickListener() {
@@ -143,7 +143,7 @@ public class LogoutActivity extends AppCompatActivity {
                                     }
                                 })
                                 .create();
-                        dialog.show();
+                        mDialog.show();
                         LogoutActivity.this.doLogout(null);
                     }
                 }).doTask();
@@ -152,7 +152,7 @@ public class LogoutActivity extends AppCompatActivity {
         new HttpClientHelper(new HttpClientHelper.CustomDoInBackground() {
             @Override
             public String getResult() {
-                if (NetLogin.doLogout(logoutUrl)) {
+                if (NetLogin.doLogout(mLogoutUrl)) {
                     return "success";
                 } else {
                     return null; // fail
@@ -161,7 +161,7 @@ public class LogoutActivity extends AppCompatActivity {
         }).setSuccessCallback(new HttpClientHelper.HttpCallback() {
             @Override
             public void doCallback(String result) {
-                if (dialog == null || !dialog.isShowing()) finish(); // if dialog not showed
+                if (mDialog == null || !mDialog.isShowing()) finish(); // if mDialog not showed
             }
         }).setErrorCallback(new HttpClientHelper.HttpCallback() {
             @Override
