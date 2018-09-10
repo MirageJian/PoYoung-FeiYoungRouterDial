@@ -1,13 +1,11 @@
 package com.feiyoung;
 
-import java.io.PrintStream;
-
-public class k {
+public class Encryption {
     private final byte[] a = new byte['Ā'];
     private final byte[] b = new byte['Ā'];
     private final int c;
 
-    public k(byte[] paramArrayOfByte)
+    public Encryption(byte[] paramArrayOfByte)
     {
         if ((paramArrayOfByte.length >= 1) && (paramArrayOfByte.length <= 256))
         {
@@ -31,7 +29,25 @@ public class k {
         throw new IllegalArgumentException("key must be between 1 and 256 bytes");
     }
 
-    private static byte a(char paramChar) {
+    public static String encrypt(String key, String password)
+    {
+//        StringBuilder localStringBuilder = new StringBuilder();
+//        localStringBuilder.append("k=");
+//        localStringBuilder.append(paramString1);
+//        localStringBuilder.append(" ,s=");
+//        localStringBuilder.append(paramString2);
+        return CustomMd5.getHexMd5(new Encryption(toBytes(key)).obfuscate(password.getBytes()));
+    }
+
+    private static byte[] toBytes(String paramString)
+    {
+        byte[] arrayOfByte = new byte[paramString.length()];
+        for (int i = 0; i < paramString.length(); i++) {
+            arrayOfByte[i] = toIntFromChar(paramString.charAt(i));
+        }
+        return arrayOfByte;
+    }
+    private static byte toIntFromChar(char paramChar) {
         switch (paramChar) {
             default:
                 return 0;
@@ -67,26 +83,8 @@ public class k {
                 return 1;
         }
     }
-    public static String a(String paramString1, String paramString2)
-    {
-        StringBuilder localStringBuilder = new StringBuilder();
-        localStringBuilder.append("k=");
-        localStringBuilder.append(paramString1);
-        localStringBuilder.append(" ,s=");
-        localStringBuilder.append(paramString2);
-        return i.a(new k(a(paramString1)).a(paramString2.getBytes()));
-    }
 
-    private static byte[] a(String paramString)
-    {
-        byte[] arrayOfByte = new byte[paramString.length()];
-        for (int i = 0; i < paramString.length(); i++) {
-            arrayOfByte[i] = a(paramString.charAt(i));
-        }
-        return arrayOfByte;
-    }
-
-    public byte[] a(byte[] paramArrayOfByte)
+    public byte[] obfuscate(byte[] paramArrayOfByte)
     {
         byte[] arrayOfByte = new byte[paramArrayOfByte.length];
         int i = 0;

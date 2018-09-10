@@ -2,13 +2,13 @@ package com.feiyoung;
 
 import java.security.MessageDigest;
 
-public class i
+public class CustomMd5
 {
-    public static String a(byte[] paramArrayOfByte)
+    public static String getHexMd5(byte[] paramArrayOfByte)
     {
         try
         {
-            return b(MessageDigest.getInstance("MD5").digest(paramArrayOfByte));
+            return toHex(MessageDigest.getInstance("MD5").digest(paramArrayOfByte));
         }
         catch (Exception e)
         {
@@ -17,7 +17,7 @@ public class i
         return "";
     }
 
-    private static String b(byte[] paramArrayOfByte)
+    private static String toHex(byte[] paramArrayOfByte)
     {
         StringBuilder localStringBuilder = new StringBuilder();
         for (int i = 0; i < paramArrayOfByte.length; i++)

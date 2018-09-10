@@ -36,23 +36,10 @@ public enum DateEnum {
     private int index;
     private String key;
 
-    private DateEnum(int var3, String var4) {
+    DateEnum(int var3, String var4) {
         this.index = var3;
         this.key = var4;
     }
-
-    public static DateEnum getDateEnumByIndex(int var0) {
-        DateEnum[] var1 = values();
-        int var2 = var1.length;
-        for(int var3 = 0; var3 < var2; ++var3) {
-            DateEnum var4 = var1[var3];
-            if (var4.getIndex() == var0) {
-                return var4;
-            }
-        }
-        return null;
-    }
-
     public static String getKeyByIndex(int var0) {
         DateEnum[] var1 = values();
         int var2 = var1.length;
@@ -64,17 +51,28 @@ public enum DateEnum {
         }
         return null;
     }
-
     public int getIndex() {
         return this.index;
     }
-    public String getKey() {
-        return this.key;
-    }
-    public void setIndex(int var1) {
-        this.index = var1;
-    }
-    public void setKey(String var1) {
-        this.key = var1;
-    }
+
+//    public static DateEnum getDateEnumByIndex(int var0) {
+//        DateEnum[] var1 = values();
+//        int var2 = var1.length;
+//        for(int var3 = 0; var3 < var2; ++var3) {
+//            DateEnum var4 = var1[var3];
+//            if (var4.getIndex() == var0) {
+//                return var4;
+//            }
+//        }
+//        return null;
+//    }
+//    public String getKey() {
+//        return this.key;
+//    }
+//    public void setIndex(int var1) {
+//        this.index = var1;
+//    }
+//    public void setKey(String var1) {
+//        this.key = var1;
+//    }
 }

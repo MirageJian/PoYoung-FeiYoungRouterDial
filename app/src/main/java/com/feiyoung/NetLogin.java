@@ -27,7 +27,7 @@ public class NetLogin {
 //        encrypt info
         String username = info[0];
         String key = DateEnum.getKeyByIndex(Calendar.getInstance().get(Calendar.DATE));
-        String password = k.a(key, info[1]);
+        String password = Encryption.encrypt(key, info[1]);
 //        login and get logout url
         return getLogoutUrl(loginUrl, username, password);
     }
