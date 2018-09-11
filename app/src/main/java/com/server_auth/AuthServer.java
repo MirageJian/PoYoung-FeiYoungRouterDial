@@ -9,5 +9,5 @@ public class AuthServer {
 
     public static final String FILE_HOST = "https://codigo.cn/apis/static/file";
     public static String apkName = "";
-    public static String version = "2.0.4";
+    public static String version = "2.0.3";
 }

@@ -134,6 +134,9 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void doCallback(String result) {
                     showProgress(false);
+                    if (NetLogin.sErrMsg.length() < 1) {
+                        NetLogin.sErrMsg = "0拨号服务器无响应，请重启/检查路由器";
+                    }
                     Snackbar.make(mLoginFormView, "拨号失败" + NetLogin.sErrMsg, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
 //                    mPasswordView.setError(getString(R.string.error_incorrect_password));
