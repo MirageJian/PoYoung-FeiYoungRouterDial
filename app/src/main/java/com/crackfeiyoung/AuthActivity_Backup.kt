@@ -28,16 +28,17 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.HashMap
 
-class AuthActivity : AppCompatActivity() {
+class AuthActivity_Backup : AppCompatActivity() {
 
     private var mProgress: View? = null//处理动画
     private var mStart: Button? = null//开始
     private var mView: View? = null
-    private var mImei: String? = null
+    private var imei: String? = null
     private var mAuthButon: Button? = null
     private var mPreferences: SharedPreferences? = null
-    private var mUsername: String? = null
-    private var mImei_text: EditText? = null
+    private var username: String? = null
+    private var imei_text: EditText? = null
+    private var updateDialog: AlertDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,13 +54,13 @@ class AuthActivity : AppCompatActivity() {
 
         mView = findViewById(R.id.auth_view)
         mProgress = findViewById(R.id.pro_guide)
-        mImei_text = findViewById(R.id.imei_text)
+        imei_text = findViewById(R.id.imei_text)
         // 按钮初始化，设置监听
         mStart = findViewById(R.id.btn_start)
         mStart!!.setOnClickListener {
-            val intent = Intent(this@AuthActivity, LoginActivity::class.java)
-            intent.putExtra("username", mUsername)
-            this@AuthActivity.startActivity(intent)
+            val intent = Intent(this@AuthActivity_Backup, LoginActivity::class.java)
+            intent.putExtra("username", username)
+            this@AuthActivity_Backup.startActivity(intent)
         }
         mAuthButon = findViewById(R.id.btn_auth)
         mAuthButon!!.setOnClickListener {
@@ -69,8 +70,8 @@ class AuthActivity : AppCompatActivity() {
         //设置参数初始化
         mPreferences = getPreferences(Context.MODE_PRIVATE)
         if (mPreferences!!.getString("new_app", "") == "true") {
-            val intent = Intent(this@AuthActivity, LoginActivity::class.java)
-            this@AuthActivity.startActivity(intent)
+            val intent = Intent(this@AuthActivity_Backup, LoginActivity::class.java)
+            this@AuthActivity_Backup.startActivity(intent)
         }
     }
 
@@ -85,14 +86,14 @@ class AuthActivity : AppCompatActivity() {
         if (requestCode == 0x12) {
             val tel = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             try {
-                mImei = tel.deviceId
+                imei = tel.deviceId
 
             } catch (ex: SecurityException) {
                 ex.printStackTrace()
-                mImei = "null"
+                imei = "null"
             }
 
-            mImei_text!!.setText(mImei)
+            imei_text!!.setText(imei)
         } else {
             finish()
         }
@@ -105,14 +106,14 @@ class AuthActivity : AppCompatActivity() {
         } else {
             val tel = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
             try {
-                mImei = tel.deviceId
+                imei = tel.deviceId
 
             } catch (ex: SecurityException) {
                 ex.printStackTrace()
-                mImei = "null"
+                imei = "null"
             }
 
-            mImei_text!!.setText(mImei)
+            imei_text!!.setText(imei)
         }
     }
 
@@ -155,7 +156,7 @@ class AuthActivity : AppCompatActivity() {
 
         override fun doInBackground(vararg params: Void): String? {
             val result: String?
-            val param = "?imei=" + mImei!!
+            val param = "?imei=" + imei!!
             try {
                 println(param)
                 result = sendGet(AuthServer.AUTH_HOST + param)
@@ -186,7 +187,7 @@ class AuthActivity : AppCompatActivity() {
                 showProcessBar(false)
                 showStart(true)
                 // 设置启动参数
-                mUsername = success
+                username = success
                 val editor = mPreferences!!.edit()
                 editor.putString("new_app", "true")
                 editor.apply()
@@ -227,7 +228,7 @@ class AuthActivity : AppCompatActivity() {
                         editor.putString("new_app", "false")
                         editor.apply()
                         AuthServer.apkName = result
-                        AlertDialog.Builder(this@AuthActivity).setTitle("新版本")
+                        AlertDialog.Builder(this@AuthActivity_Backup).setTitle("新版本")
                                 .setMessage("破样发布了新的版本，请更新")
                                 .setCancelable(false)
                                 .setPositiveButton("好") { dialogInterface, i ->
@@ -247,7 +248,7 @@ class AuthActivity : AppCompatActivity() {
                     val editor = mPreferences!!.edit()
                     editor.putString("new_app", "false")
                     editor.apply()
-                    AlertDialog.Builder(this@AuthActivity).setTitle("出错")
+                    AlertDialog.Builder(this@AuthActivity_Backup).setTitle("出错")
                             .setMessage("链接验证服务器失败")//设置显示的内容
                             .setCancelable(false)
                             .setPositiveButton("好") { dialogInterface, i -> }
