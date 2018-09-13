@@ -5,16 +5,16 @@ public class FeiyoungServer {
     public static final String REDIRECT_URL = "http://100.64.0.1";
     public static final String TEST_CONNECT_URL = "http://baidu.com";
 
-    public static boolean useMobile = true;
+    public static boolean sUseMobile = true;
     private static final String MOBILE_VERSION = "Maod";
     private static final String COMPUTER_VERSION = "B6EA";
     public static String getAppVersion(){
-        return useMobile ? MOBILE_VERSION : COMPUTER_VERSION;
+        return sUseMobile ? MOBILE_VERSION : COMPUTER_VERSION;
     }
     public static String getAppUa(){
-        return "CDMA+WLAN("+ (useMobile ? MOBILE_VERSION : "win64") +")";
+        return "CDMA+WLAN("+ (sUseMobile ? MOBILE_VERSION : "win64") +")";
     }
     public static String getAppStart(){
-        return "!^" + (useMobile ? MOBILE_VERSION : COMPUTER_VERSION) + "0";
+        return "!^" + (sUseMobile ? MOBILE_VERSION : COMPUTER_VERSION) + "0";
     }
 }

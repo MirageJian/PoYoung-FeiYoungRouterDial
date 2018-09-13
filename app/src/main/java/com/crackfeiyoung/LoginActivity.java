@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void attemptLogin() {
         // Set Preferences
-        FeiyoungServer.useMobile = mSwitch.isChecked();
+        FeiyoungServer.sUseMobile = mSwitch.isChecked();
         setPreferences();
         // Reset errors.
         mUsernameView.setError(null);

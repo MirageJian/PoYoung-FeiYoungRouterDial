@@ -220,19 +220,19 @@ class AuthActivity_Backup : AppCompatActivity() {
                 .setMethod(HttpClientHelper.GET)
                 .setParams(params)
                 .setSuccessCallback { result ->
-                    if (result != "/PoYoung" + AuthServer.version + ".apk") {
+                    if (result != "/PoYoung" + AuthServer.sVersion + ".apk") {
                         showProcessBar(false)
                         showStart(false)
                         // 设置启动参数
                         val editor = mPreferences!!.edit()
                         editor.putString("new_app", "false")
                         editor.apply()
-                        AuthServer.apkName = result
+                        AuthServer.sApkName = result
                         AlertDialog.Builder(this@AuthActivity_Backup).setTitle("新版本")
                                 .setMessage("破样发布了新的版本，请更新")
                                 .setCancelable(false)
                                 .setPositiveButton("好") { dialogInterface, i ->
-                                    val uri = Uri.parse(AuthServer.FILE_HOST + AuthServer.apkName)
+                                    val uri = Uri.parse(AuthServer.FILE_HOST + AuthServer.sApkName)
                                     val intent = Intent(Intent.ACTION_VIEW, uri)
                                     startActivity(intent)
                                  }
