@@ -34,19 +34,16 @@ public enum DateEnum {
     TWO(2, "0267854319");
 
     private int index;
-    private String key;
+    private String value;
 
-    DateEnum(int var3, String var4) {
-        this.index = var3;
-        this.key = var4;
+    DateEnum(int index, String value) {
+        this.index = index;
+        this.value = value;
     }
-    public static String getKeyByIndex(int var0) {
-        DateEnum[] var1 = values();
-        int var2 = var1.length;
-        for(int var3 = 0; var3 < var2; ++var3) {
-            DateEnum var4 = var1[var3];
-            if (var4.getIndex() == var0) {
-                return var4.key;
+    public static String getKeyByIndex(int index) {
+        for(DateEnum key: values()) {
+            if (key.getIndex() == index) {
+                return key.value;
             }
         }
         return null;
