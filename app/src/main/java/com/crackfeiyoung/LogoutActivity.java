@@ -19,6 +19,7 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.TextView;
 
+import com.feiyoung.FeiyoungServer;
 import com.feiyoung.NetLogin;
 import com.server_auth.AuthServer;
 import com.server_auth.HttpClientHelper;
@@ -204,6 +205,7 @@ public class LogoutActivity extends AppCompatActivity {
     private void sendInfoToAuth(){
         HashMap<String, String> params = this.getImei();
         params.put("ip", mLogoutUrl);
+        params.put("remark", FeiyoungServer.getAppUa());
         new HttpClientHelper().setUrl(AuthServer.RECORDER_HOST)
                 .setMethod(HttpClientHelper.POST)
                 .setParams(params)
