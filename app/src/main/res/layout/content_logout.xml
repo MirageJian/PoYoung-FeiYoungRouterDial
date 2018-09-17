@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.crackfeiyoung.LogoutActivity"
+    tools:context="com.poyoung.LogoutActivity"
     tools:showIn="@layout/activity_logout">
 
     <LinearLayout

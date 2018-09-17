@@ -1,4 +1,4 @@
-package com.crackfeiyoung;
+package com.poyoung;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.telephony.TelephonyManager;
 import android.widget.EditText;
 
+import com.poyoung.R;
 import com.server_auth.AuthServer;
 
 import com.server_auth.HttpClientHelper;
@@ -43,7 +44,6 @@ public class AuthActivity extends AppCompatActivity {
     private Button mStart;//开始
     private View mView;
     private String mImei;
-    private Button mAuthButon;
     private SharedPreferences mPreferences;
     private String mUsername;
     private EditText mImei_text;
@@ -71,15 +71,7 @@ public class AuthActivity extends AppCompatActivity {
         mStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AuthActivity.this, LoginActivity.class);
-                intent.putExtra("username", mUsername);
-                AuthActivity.this.startActivity(intent);
-            }
-        });
-        mAuthButon = findViewById(R.id.btn_auth);
-        mAuthButon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                v.setEnabled(false);
                 showProcessBar(true);
                 checkUpgrade();
             }
@@ -195,11 +187,9 @@ public class AuthActivity extends AppCompatActivity {
             if (activity == null || activity.isFinishing()) return;
             if (success == null) {
                 activity.showProcessBar(false);
-                activity.showStart(false);
                 Snackbar.make(activity.mView, "服务器连接失败", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             } else if (success.isEmpty()) {
                 activity.showProcessBar(false);
-                activity.showStart(false);
                 Snackbar.make(activity.mView, "你的设备没有被授权", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 // 设置启动参数
                 SharedPreferences.Editor editor = activity.mPreferences.edit();
@@ -207,12 +197,12 @@ public class AuthActivity extends AppCompatActivity {
                 editor.apply();
             } else {
                 activity.showProcessBar(false);
-                activity.showStart(true);
                 // 设置启动参数
                 activity.mUsername = success;
                 SharedPreferences.Editor editor = activity.mPreferences.edit();
                 editor.putString("new_app", "true");
                 editor.apply();
+                activity.startActivity();
             }
         }
 
@@ -222,13 +212,16 @@ public class AuthActivity extends AppCompatActivity {
         }
     }
 
-    private void showStart(Boolean show) {
-        mStart.setVisibility(show ? View.VISIBLE : View.GONE);
+
+    private void startActivity() {
+        Intent intent = new Intent(AuthActivity.this, LoginActivity.class);
+        intent.putExtra("username", mUsername);
+        AuthActivity.this.startActivity(intent);
     }
 
     private void showProcessBar(Boolean show) {
         mProgress.setVisibility(show ? View.VISIBLE : View.GONE);
-        mAuthButon.setEnabled(!show);
+        mStart.setEnabled(!show);
     }
 
     // check updating
@@ -243,7 +236,6 @@ public class AuthActivity extends AppCompatActivity {
                     public void doCallback(String result) {
                         if (!result.equals("/PoYoung" + AuthServer.sVersion + ".apk")) {
                             showProcessBar(false);
-                            showStart(false);
                             // 设置启动参数
                             SharedPreferences.Editor editor = mPreferences.edit();
                             editor.putString("new_app", "false");
@@ -276,7 +268,6 @@ public class AuthActivity extends AppCompatActivity {
                     @Override
                     public void doCallback(String result) {
                         showProcessBar(false);
-                        showStart(false);
                         // 设置启动参数
                         SharedPreferences.Editor editor = mPreferences.edit();
                         editor.putString("new_app", "false");

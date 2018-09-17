@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.crackfeiyoung">
+    package="com.poyoung">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS" /> -->
@@ -20,7 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AuthActivity">
+        <activity android:name="com.poyoung.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +30,7 @@
         <!-- 其他的配置项 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.crackfeiyoung.fileprovider"
+            android:authorities="com.poyoung.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -39,10 +39,10 @@
         </provider>
         <!-- 其他的配置项 -->
         <activity
-            android:name=".LoginActivity"
+            android:name="com.poyoung.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name=".LogoutActivity"
+            android:name="com.poyoung.LogoutActivity"
             android:label="@string/title_activity_logout"
             android:theme="@style/AppTheme"/>
     </application>

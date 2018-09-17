@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="false"
-    tools:context="com.crackfeiyoung.AuthActivity"
+    tools:context="com.poyoung.AuthActivity"
     android:id="@+id/auth_view">
 
     <ImageView
@@ -60,15 +60,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btn_auth"
-                style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/guide_button"
-                android:visibility="visible" />
-
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -79,8 +70,7 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/guide_start"
-                android:visibility="gone" />
+                android:text="@string/guide_start" />
         </LinearLayout>
 
     </LinearLayout>

@@ -31,6 +31,7 @@ public class HttpClientHelper extends AsyncTask<Void, Void, Boolean> {
     private String mHttpUrl;
     private String mHttpMethod = HttpClientHelper.GET;
     private String mHttpParams;
+    private HashMap<String, String> mHttpRequestProperties;
     private HttpCallback mHttpSuccessCallback;
     private HttpCallback mHttpErrorCallback;
     private HttpCallback mHttpCancelCallback;
@@ -61,6 +62,12 @@ public class HttpClientHelper extends AsyncTask<Void, Void, Boolean> {
                 connection.setRequestProperty("Cookie", sCookies);
                 connection.setRequestProperty("User-Agent", FeiyoungServer.getAppUa());
                 connection.setRequestProperty("ClientVersion", FeiyoungServer.getAppVersion());
+                if (this.mHttpRequestProperties != null){
+                    for (String key : this.mHttpRequestProperties.keySet()) {
+                        String value = this.mHttpRequestProperties.get(key);
+                        connection.setRequestProperty(key, value);
+                    }
+                }
                 connection.connect();
                 if (this.mHttpMethod.equals(HttpClientHelper.POST)) {
                     //字符流写入数据 //输出流，用来发送请求，http请求实际上直到这个函数里面才正式发送出去
@@ -138,6 +145,11 @@ public class HttpClientHelper extends AsyncTask<Void, Void, Boolean> {
             sendParams = sendParams.append(key).append("=").append(value);
         }
         this.mHttpParams = sendParams.toString();
+        return this;
+    }
+
+    public HttpClientHelper setRequestProperty(HashMap<String, String> hashMap) {
+        this.mHttpRequestProperties = hashMap;
         return this;
     }
 

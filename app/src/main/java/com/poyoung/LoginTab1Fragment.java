@@ -1,28 +1,29 @@
-package com.crackfeiyoung;
+package com.poyoung;
 
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.poyoung.R;
 import com.feiyoung.FeiyoungServer;
 import com.feiyoung.NetLogin;
 import com.server_auth.HttpClientHelper;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginTab1Fragment extends Fragment {
     // UI references.
     private EditText mUsernameView;
     private EditText mPasswordView;
@@ -31,20 +32,29 @@ public class LoginActivity extends AppCompatActivity {
     private Switch mSwitch;
     private SharedPreferences mPreferences;
 
+    public LoginTab1Fragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_login_tab1, container, false);
         // Set up the login form.
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-        mUsernameView = findViewById(R.id.email);
-        mPasswordView = findViewById(R.id.password);
-        mPasswordView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-            }
-        });
+        mLoginFormView = view.findViewById(R.id.login_form);
+        mProgressView = view.findViewById(R.id.login_progress);
+        mUsernameView = view.findViewById(R.id.email);
+        mPasswordView = view.findViewById(R.id.password);
+//        mPasswordView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean b) {
+//            }
+//        });
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -55,20 +65,22 @@ public class LoginActivity extends AppCompatActivity {
                 return false;
             }
         });
-        findViewById(R.id.email_sign_in_button).setOnClickListener(new OnClickListener() {
+        view.findViewById(R.id.email_sign_in_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
-        findViewById(R.id.btn_recheck).setOnClickListener(new OnClickListener() {
+        view.findViewById(R.id.btn_recheck).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                getActivity().finish();
             }
         });
-        mSwitch = findViewById(R.id.switch_mode);
+        mSwitch = view.findViewById(R.id.switch_mode);
         getInfoFromPreferences();
+
+        return view;
     }
 
     /**
@@ -125,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void doCallback(String result) {
                     showProgress(false);
-                    Intent intent = new Intent(LoginActivity.this, LogoutActivity.class);
+                    Intent intent = new Intent(getActivity(), LogoutActivity.class);
                     intent.putExtra("logoutUrl", result);
                     startActivity(intent);
                     // finish();
@@ -171,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getInfoFromPreferences() {
-        mPreferences = getPreferences(Context.MODE_PRIVATE);
+        mPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = mPreferences.edit();
         // preference param init
         String username = mPreferences.getString("username", "");
@@ -179,9 +191,9 @@ public class LoginActivity extends AppCompatActivity {
         mPasswordView.setText(mPreferences.getString("password", ""));
         // 判断启动参数是否为空
         if (username.isEmpty()) {
-            mUsernameView.setText(getIntent().getStringExtra("username"));
+            mUsernameView.setText(getActivity().getIntent().getStringExtra("username"));
             // 设置保存账号参数
-            editor.putString("username", getIntent().getStringExtra("username"));
+            editor.putString("username", getActivity().getIntent().getStringExtra("username"));
             editor.apply();
         }
         mSwitch.setChecked(mPreferences.getBoolean("phoneMode",true));
@@ -197,12 +209,4 @@ public class LoginActivity extends AppCompatActivity {
         editor.putBoolean("phoneMode", phoneMode);
         editor.apply();
     }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        startActivity(intent);
-    }
 }
-

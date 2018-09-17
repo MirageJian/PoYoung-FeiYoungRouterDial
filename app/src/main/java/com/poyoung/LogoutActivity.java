@@ -1,4 +1,4 @@
-package com.crackfeiyoung;
+package com.poyoung;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -19,6 +19,7 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.TextView;
 
+import com.poyoung.R;
 import com.feiyoung.FeiyoungServer;
 import com.feiyoung.NetLogin;
 import com.server_auth.AuthServer;
