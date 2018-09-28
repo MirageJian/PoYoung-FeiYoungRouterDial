@@ -1,4 +1,4 @@
-package com.poyoung;
+package com.poyoung.login;
 
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.poyoung.R;
+import com.poyoung.TabLayoutAdapter;
 import com.poyoung.dummy.DummyContent;
 
 public class LoginActivity extends AppCompatActivity implements LoginTab2Fragment.OnListFragmentInteractionListener {

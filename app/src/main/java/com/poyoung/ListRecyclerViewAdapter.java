@@ -6,8 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.poyoung.LoginTab2Fragment.OnListFragmentInteractionListener;
-import com.poyoung.R;
+import com.poyoung.login.LoginTab2Fragment.OnListFragmentInteractionListener;
 import com.poyoung.dummy.DummyContent.DummyItem;
 
 import java.util.List;

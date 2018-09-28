@@ -1,7 +1,7 @@
 package com.server_auth;
 
 public class RouterInfo {
-    public static class FW300R {
+    public static class WR740N {
         // 验证接口 过去的验证地址是authorisation
         public static String sHost = "http://192.168.1.1";
         private static final String sReleaseHost = "/userRpm/StatusRpm.htm";

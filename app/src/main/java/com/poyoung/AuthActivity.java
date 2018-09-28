@@ -23,7 +23,7 @@ import android.widget.Button;
 import android.telephony.TelephonyManager;
 import android.widget.EditText;
 
-import com.poyoung.R;
+import com.poyoung.login.LoginActivity;
 import com.server_auth.AuthServer;
 
 import com.server_auth.HttpClientHelper;

@@ -41,9 +41,9 @@
     <string name="login_tab_name_2">已连接</string>
     <string name="login_tab_name_3">释放IP</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="login_fragment_tab1_tip">实验性功能，在路由器需要重启的情况下可以使用这个功能。已适配路由器型号：FAST FW300，</string>
-    <string name="login_fragment_tab1_submit">尝试释放IP</string>
+    <string name="login_fragment_tab1_tip">实验性功能，在路由器需要重启的情况下可以使用这个功能。已适配路由器型号：TP WR740N</string>
+    <string name="login_fragment_tab1_realise">释放</string>
+    <string name="login_fragment_tab1_renew">更新</string>
     <string name="login_fragment_tab1_router_ip">路由器地址</string>
     <string name="login_fragment_tab1_router_password">路由器密码</string>
 </resources>

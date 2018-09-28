@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-    tools:context="com.poyoung.LoginTab2Fragment"
+    tools:context="com.poyoung.login.LoginTab2Fragment"
     tools:listitem="@layout/fragment_login_tab2_item" />

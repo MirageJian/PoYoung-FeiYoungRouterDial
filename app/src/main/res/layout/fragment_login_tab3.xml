@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.poyoung.LoginTab3Fragment">
+    tools:context="com.poyoung.login.LoginTab3Fragment">
 
     <LinearLayout
         android:id="@+id/email_login_form"
@@ -57,11 +57,17 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/login_fragment_tab1_submit"
+                android:id="@+id/login_fragment_tab1_realise"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login_fragment_tab1_submit" />
+                android:text="@string/login_fragment_tab1_realise" />
+            <Button
+                android:id="@+id/login_fragment_tab1_renew"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_fragment_tab1_renew" />
 
         </LinearLayout>
 

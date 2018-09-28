@@ -39,10 +39,10 @@
         </provider>
         <!-- 其他的配置项 -->
         <activity
-            android:name="com.poyoung.LoginActivity"
+            android:name="com.poyoung.login.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
-            android:name="com.poyoung.LogoutActivity"
+            android:name="com.poyoung.logout.LogoutActivity"
             android:label="@string/title_activity_logout"
             android:theme="@style/AppTheme"/>
     </application>

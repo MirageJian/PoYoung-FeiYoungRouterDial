@@ -1,19 +1,18 @@
-package com.poyoung;
+package com.poyoung.login;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.poyoung.ListRecyclerViewAdapter;
 import com.poyoung.R;
 import com.poyoung.dummy.DummyContent;
 import com.poyoung.dummy.DummyContent.DummyItem;
@@ -62,7 +61,6 @@ public class LoginTab2Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login_tab2_list, container, false);
-
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();

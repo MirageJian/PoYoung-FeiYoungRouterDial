@@ -1,4 +1,4 @@
-package com.poyoung;
+package com.poyoung.login;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.poyoung.logout.LogoutActivity;
 import com.poyoung.R;
 import com.feiyoung.FeiyoungServer;
 import com.feiyoung.NetLogin;
@@ -164,12 +165,10 @@ public class LoginTab1Fragment extends Fragment {
     }
 
     private boolean isEmailValid(String username) {
-        //TODO: Replace this with your own logic
         return username.length() > 4;// email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
 
