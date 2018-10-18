@@ -6,46 +6,61 @@
     tools:context="com.poyoung.login.LoginTab3Fragment">
 
     <LinearLayout
-        android:id="@+id/email_login_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
         android:weightSum="1">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/login_fragment_tab1_tip" />
+            android:layout_marginBottom="16dp"
+            android:text="@string/login_fragment_tab3_dial_guide" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:text="@string/login_fragment_tab3_existed_problem1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp"
+            android:text="@string/login_fragment_tab3_tip" />
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/login_fragment_tab1_router_ip"
-            android:hint="@string/login_fragment_tab1_router_ip"
-            android:imeOptions="actionGo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text" />
+            <EditText
+                android:id="@+id/login_fragment_tab3_router_ip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/login_fragment_tab3_router_ip"
+                android:imeOptions="actionGo"
+                android:inputType="text" />
         </android.support.design.widget.TextInputLayout>
+
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/login_fragment_tab1_router_password"
-            android:hint="@string/login_fragment_tab1_router_password"
-            android:imeOptions="actionGo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPassword" />
+            <EditText
+                android:id="@+id/login_fragment_tab3_router_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/login_fragment_tab3_router_password"
+                android:imeOptions="actionGo"
+                android:inputType="textPassword" />
         </android.support.design.widget.TextInputLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -57,21 +72,19 @@
                 android:layout_weight="1" />
 
             <Button
-                android:id="@+id/login_fragment_tab1_realise"
+                android:id="@+id/login_fragment_tab3_realise"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login_fragment_tab1_realise" />
+                android:text="@string/login_fragment_tab3_realise" />
+
             <Button
-                android:id="@+id/login_fragment_tab1_renew"
+                android:id="@+id/login_fragment_tab3_renew"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/login_fragment_tab1_renew" />
+                android:text="@string/login_fragment_tab3_renew" />
 
         </LinearLayout>
-
     </LinearLayout>
-
-
 </FrameLayout>

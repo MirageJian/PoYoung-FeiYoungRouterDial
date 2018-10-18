@@ -1,8 +1,10 @@
 package com.poyoung.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,8 +16,11 @@ import android.view.ViewGroup;
 
 import com.poyoung.ListRecyclerViewAdapter;
 import com.poyoung.R;
-import com.poyoung.dummy.DummyContent;
-import com.poyoung.dummy.DummyContent.DummyItem;
+import com.poyoung.logout.LogoutActivity;
+import com.poyoung.logout.LogoutUrlRecoder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A fragment representing a list of Items.
@@ -30,6 +35,10 @@ public class LoginTab2Fragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+
+    private SwipeRefreshLayout mSwipe;
+    private ListRecyclerViewAdapter mAdapter;
+    private ArrayList<HashMap<String, String>> mListLogoutUrl;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -51,33 +60,43 @@ public class LoginTab2Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login_tab2_list, container, false);
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+        mSwipe = view.findViewById(R.id.login_fragment_tab2_swipe);
+        mSwipe.setProgressBackgroundColorSchemeResource(android.R.color.white);
+        mSwipe.setColorSchemeResources(R.color.colorAccent, R.color.colorPrimary, R.color.colorPrimaryDark);
+        mSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mListLogoutUrl.clear();
+                mListLogoutUrl.addAll(LogoutUrlRecoder.getAll(getContext()));
+                mAdapter.notifyDataSetChanged();
+                mSwipe.setRefreshing(false);
             }
-            recyclerView.setAdapter(new ListRecyclerViewAdapter(DummyContent.ITEMS, mListener));
-            recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
-                    new LinearLayoutManager(context).getOrientation()));
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
+        });
+        // Set the adapter
+        // if (view instanceof RecyclerView) { }
+        RecyclerView recyclerView = view.findViewById(R.id.login_fragment_tab2_list);
+        Context context = recyclerView.getContext();
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        mListLogoutUrl = LogoutUrlRecoder.getAll(getContext());
+        mAdapter = new ListRecyclerViewAdapter(mListLogoutUrl, new OnRecycleViewInteractionListener());
+        recyclerView.setAdapter(mAdapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),
+                new LinearLayoutManager(context).getOrientation()));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -108,6 +127,25 @@ public class LoginTab2Fragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(HashMap<String, String> item);
+    }
+
+    public class OnRecycleViewInteractionListener {
+        public void onRecycleItemClick(HashMap<String, String> item) {
+            HashMap<String, String> map = LogoutUrlRecoder.getOne(getContext(), item.get("logoutUrl"));
+            String result = null;
+            if (map != null) {
+                result = map.get("logoutUrl");
+            }
+            Intent intent = new Intent(getActivity(), LogoutActivity.class);
+            intent.putExtra("logoutUrl", result);
+            startActivity(intent);
+        }
+        public void onRecycleItemDelete(HashMap<String, String> item) {
+            LogoutUrlRecoder.removeOne(getContext(),item.get("logoutUrl"));
+            mListLogoutUrl.clear();
+            mListLogoutUrl.addAll(LogoutUrlRecoder.getAll(getContext()));
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

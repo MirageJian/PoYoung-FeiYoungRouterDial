@@ -42,7 +42,6 @@ public class LogoutActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mLogoutUrl = getIntent().getStringExtra("logoutUrl");
-        LogoutUrlRecoder.addOne(mLogoutUrl);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +68,7 @@ public class LogoutActivity extends AppCompatActivity {
             @Override
             public void doCallback(String result) {
                 if (mDialog == null || !mDialog.isShowing()) {
-                    LogoutUrlRecoder.removeOne(mLogoutUrl);
+                    LogoutUrlRecoder.removeOne(getApplicationContext(), mLogoutUrl);
                     finish(); // if mDialog not showed
                 }
             }
@@ -81,7 +80,7 @@ public class LogoutActivity extends AppCompatActivity {
                             .setAction("关闭", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    LogoutUrlRecoder.removeOne(mLogoutUrl);
+                                    LogoutUrlRecoder.removeOne(getApplicationContext(), mLogoutUrl);
                                     finish();
                                 }
                             }).show();
@@ -102,6 +101,7 @@ public class LogoutActivity extends AppCompatActivity {
         if (clientip == null) {
             clientip = "网络畅通，无需拨号";
             tv.setText(clientip);
+            findViewById(R.id.fab).setEnabled(false);
         } else {
             tv.setText(clientip);
         }

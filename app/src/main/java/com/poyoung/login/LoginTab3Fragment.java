@@ -34,15 +34,15 @@ public class LoginTab3Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login_tab3, container, false);
-        mRouterIp = view.findViewById(R.id.login_fragment_tab1_router_ip);
-        mRouterPassword = view.findViewById(R.id.login_fragment_tab1_router_password);
-        view.findViewById(R.id.login_fragment_tab1_realise).setOnClickListener(new View.OnClickListener() {
+        mRouterIp = view.findViewById(R.id.login_fragment_tab3_router_ip);
+        mRouterPassword = view.findViewById(R.id.login_fragment_tab3_router_password);
+        view.findViewById(R.id.login_fragment_tab3_realise).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptRealise0();
             }
         });
-        view.findViewById(R.id.login_fragment_tab1_renew).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.login_fragment_tab3_renew).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptRenew0();

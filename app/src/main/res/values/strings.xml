@@ -16,9 +16,8 @@
     </string>
     <string name="btn_login_out">尝试登出断网</string>
     <string name="btn_report">报告问题</string>
-    <string name="instruction1">如果需要及时退出登陆，请不要关闭应用，或退出此页面。长时间使用，可以随意退出关闭。</string>
-    <string name="guide_content">在连网的情况下（最好使用流量），首先点击下面按钮进行验证，验证成功后就可以使用。进入账号密码界面后，wifi切换成"feiyoung"或者"接了feiyoung盒子的路由器"。注意：账号无法更改，如需更改请联系作者。</string>
-    <string name="guide_button">验证</string>
+    <string name="instruction1">软件可以随意关闭，右下角浮动按钮可以断开波号连接。</string>
+    <string name="guide_content">在连网的情况下（最好使用流量），首先点击下面开始按钮进行验证，验证成功后会自动进入波号页面，以后可以不用重新验证。</string>
     <string name="guide_start">让我们开始吧</string>
     <string name="btn_get_password">获取密码</string>
     <string name="app_password">掌大登陆密码</string>
@@ -41,9 +40,11 @@
     <string name="login_tab_name_2">已连接</string>
     <string name="login_tab_name_3">释放IP</string>
 
-    <string name="login_fragment_tab1_tip">实验性功能，在路由器需要重启的情况下可以使用这个功能。已适配路由器型号：TP WR740N</string>
-    <string name="login_fragment_tab1_realise">释放</string>
-    <string name="login_fragment_tab1_renew">更新</string>
-    <string name="login_fragment_tab1_router_ip">路由器地址</string>
-    <string name="login_fragment_tab1_router_password">路由器密码</string>
+    <string name="login_fragment_tab3_tip">实验性功能：在路由器需要重启的情况下可以使用这个功能。已适配路由器型号：TP WR740N</string>
+    <string name="login_fragment_tab3_realise">释放</string>
+    <string name="login_fragment_tab3_renew">更新</string>
+    <string name="login_fragment_tab3_router_ip">路由器地址</string>
+    <string name="login_fragment_tab3_router_password">路由器密码</string>
+    <string name="login_fragment_tab3_dial_guide">帮助：进入账号密码界面后，请把wifi切换成“feiyoung”、“接了feiyoung盒子的路由器”或者“外网”。如果需要登出可以在“已连接”页面点击ip进行登出。注意：账号无法更改。</string>
+    <string name="login_fragment_tab3_existed_problem1">问题1：长时间没有网络流量（没有设备连接WiFi）电信会断网，再次波号无用，重启路由器或者切换IP可以解决。</string>
 </resources>

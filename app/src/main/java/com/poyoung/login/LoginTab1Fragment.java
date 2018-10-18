@@ -22,6 +22,7 @@ import com.poyoung.logout.LogoutActivity;
 import com.poyoung.R;
 import com.feiyoung.FeiyoungServer;
 import com.feiyoung.NetLogin;
+import com.poyoung.logout.LogoutUrlRecoder;
 import com.server_auth.HttpClientHelper;
 
 public class LoginTab1Fragment extends Fragment {
@@ -140,6 +141,8 @@ public class LoginTab1Fragment extends Fragment {
                     showProgress(false);
                     Intent intent = new Intent(getActivity(), LogoutActivity.class);
                     intent.putExtra("logoutUrl", result);
+                    if (result != null)
+                        LogoutUrlRecoder.addOne(getActivity().getApplicationContext(), result);
                     startActivity(intent);
                     // finish();
                 }
