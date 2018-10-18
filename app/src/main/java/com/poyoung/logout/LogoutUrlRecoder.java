@@ -25,7 +25,6 @@ public class LogoutUrlRecoder {
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(new File(filename));
-            System.out.println(fis);
             int len;
             byte[] buf = new byte[1024];
             while ((len = fis.read(buf)) != -1) {

@@ -141,7 +141,7 @@ public class LoginTab1Fragment extends Fragment {
                     showProgress(false);
                     Intent intent = new Intent(getActivity(), LogoutActivity.class);
                     intent.putExtra("logoutUrl", result);
-                    if (result != null)
+                    if (result != null && !result.equals("http://baidu.com"))
                         LogoutUrlRecoder.addOne(getActivity().getApplicationContext(), result);
                     startActivity(intent);
                     // finish();
