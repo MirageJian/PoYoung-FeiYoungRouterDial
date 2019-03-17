@@ -1,10 +1,7 @@
 package com.feiyoung;
 
 import android.content.Context;
-import android.net.DhcpInfo;
-import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.util.Base64;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -15,7 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class AuthAtrrTool {
+class AuthAtrrTool {
     private static String getAttr8(HashMap<String, String> map) {
         String[] attr2;
         try {
@@ -31,7 +28,6 @@ public class AuthAtrrTool {
         // 拼接ping命令
         long l1 = System.currentTimeMillis();
         StringBuilder pingCmd = new StringBuilder();
-        pingCmd.append("cmd=");
         pingCmd.append("ping -c ");
         pingCmd.append("1");
         pingCmd.append(" -w ");
@@ -45,27 +41,29 @@ public class AuthAtrrTool {
             process.waitFor();
             // 处理返回数据
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            StringBuilder result = new StringBuilder();
-            result.append("content=");
-            result.append(reader.readLine());
+            StringBuilder result = new StringBuilder("content=");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
             System.out.println(result);
         } catch (Exception e) {
             e.printStackTrace();
         }
         // 连接结果
         StringBuilder result = new StringBuilder();
-        long l2 = System.currentTimeMillis() - l1 + 2030;
+        long l2 = System.currentTimeMillis() - l1;
         result.append(",");
         result.append(l2);
-        result.append(",-1,not matcher ip");
-        l2 = System.currentTimeMillis() - l1 + 2039;
+        result.append(",-1,not matcher content");
+        l2 = System.currentTimeMillis() - l1;
         result.append(";,");
         result.append(l2);
-        result.append(",-1,not matcher ip");
-        l2 = System.currentTimeMillis() - l1 + 2028;
+        result.append(",-1,not matcher content");
+        l2 = System.currentTimeMillis() - l1;
         result.append(";,");
         result.append(l2);
-        result.append(",-1,not matcher ip");
+        result.append(",-1,not matcher content");
         return EncryptionTool.encrypt2(result.toString());
     }
 
@@ -87,14 +85,10 @@ public class AuthAtrrTool {
     }
 
     private static String getAttr6(HashMap<String, String> loginParamsMap) {
-        return EncryptionTool.encrypt2(loginParamsMap.get("usermac"));
+        return EncryptionTool.encrypt2(loginParamsMap.get("usermac").replaceAll("-", ":").toUpperCase());
     }
 
-    private static String getAttr7(Context context) {
-        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        if (wifiManager == null) return null;
-        DhcpInfo info = wifiManager.getDhcpInfo();
-        String ip = ((info.gateway & 0xFF) + "." + ((info.gateway >>>= 8) & 0xFF) + "." + ((info.gateway >>>= 8) & 0xFF) + "." + ((info.gateway >>>= 8) & 0xFF));
+    private static String getAttr7() {
         StringBuilder str = new StringBuilder();
         // 获取arp信息
         BufferedReader br = null;
@@ -104,6 +98,8 @@ public class AuthAtrrTool {
             while ((line = br.readLine()) != null) {
                 String t = line.trim();
                 if (t.length() < 63) continue;
+                line = line.replaceAll("\\d+.\\d+.\\d+.\\d+", "100.64.0.1");
+//                line = line.replaceAll("[a-f\\d]{2}:[a-f\\d]{2}:[a-f\\d]{2}:[a-f\\d]{2}:[a-f\\d]{2}:[a-f\\d]{2}", "38:4c:4f:38:73:86");
                 str.append(line);
                 str.append(";");
             }
@@ -135,7 +131,7 @@ public class AuthAtrrTool {
         return "0";
     }
 
-    public static HashMap<String, String> returnLoginParams(String username, String password, HashMap<String, String> loginParamsMap, HashMap<String, String> attrMap, Context context) {
+    static HashMap<String, String> returnLoginParams(String username, String password, HashMap<String, String> loginParamsMap, HashMap<String, String> attrMap) {
         HashMap<String, String> paramsMap = new HashMap<>();
         paramsMap.put("UserName", FeiyoungServer.getAppStart() + username);
         paramsMap.put("Password", password);
@@ -145,7 +141,7 @@ public class AuthAtrrTool {
             paramsMap.put("AidcAuthAttr4", getAttr4());
             paramsMap.put("AidcAuthAttr5", getAttr5(loginParamsMap));
             paramsMap.put("AidcAuthAttr6", getAttr6(loginParamsMap));
-            paramsMap.put("AidcAuthAttr7", getAttr7(context));
+            paramsMap.put("AidcAuthAttr7", getAttr7());
             paramsMap.put("AidcAuthAttr8", getAttr8(attrMap));
             paramsMap.put("AidcAuthAttr15", getAttr15(attrMap));
             paramsMap.put("AidcAuthAttr22", getAttr22Or24());

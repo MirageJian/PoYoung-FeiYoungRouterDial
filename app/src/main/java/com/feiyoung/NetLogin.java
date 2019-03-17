@@ -10,6 +10,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -19,7 +21,7 @@ public class NetLogin {
     private static String sCookies = "";
     public static String sErrMsg = "";
 
-    public String doLogin(Context context, String... info) {
+    public String doLogin(String... info) {
         // get login url
         HashMap<String, String> authAttrs = new HashMap<>();
         String loginUrl = getLoginUrl(authAttrs);
@@ -34,7 +36,7 @@ public class NetLogin {
         if (key == null) return null;
         String password = EncryptionTool.encryptPassword(key, info[1]);
         // 处理AuthAttr
-        HashMap<String, String> paramsMap = AuthAtrrTool.returnLoginParams(username, password,unLinkParams(loginUrl), authAttrs, context);
+        HashMap<String, String> paramsMap = AuthAtrrTool.returnLoginParams(username, password,unLinkParams(loginUrl), authAttrs);
         System.out.println(paramsMap);
         System.out.println(authAttrs);
         // 登陆并取得登出信息
@@ -126,10 +128,12 @@ public class NetLogin {
             connection.setRequestMethod("POST");
             connection.setDoInput(true);
             connection.setDoOutput(true);
-            connection.setRequestProperty("Cookie", sCookies);
+            if (!FeiyoungServer.sUseMobile)
+                connection.setRequestProperty("Cookie", sCookies);
             connection.setRequestProperty("User-Agent", FeiyoungServer.getAppUa());
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            connection.setRequestProperty("ClientVersion", FeiyoungServer.getAppVersion());
+            if (!FeiyoungServer.sUseMobile)
+                connection.setRequestProperty("ClientVersion", FeiyoungServer.getAppVersion());
             connection.setConnectTimeout(10_000);
             connection.connect();
             //字符流写入数据 //输出流，用来发送请求，http请求实际上直到这个函数里面才正式发送出去
@@ -197,6 +201,11 @@ public class NetLogin {
         StringBuilder sendParams = new StringBuilder();
         for (String key : getParams.keySet()) {
             String value = getParams.get(key);
+            try {
+                value = URLEncoder.encode(value, "UTF-8");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (!sendParams.toString().equals("")) sendParams = sendParams.append("&");
             sendParams = sendParams.append(key).append("=").append(value);
         }
