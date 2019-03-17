@@ -133,7 +133,7 @@ public class LoginTab1Fragment extends Fragment {
                 @Override
                 public String getResult() {
                     String[] info = {username, password};
-                    return new NetLogin().doLogin(info);
+                    return new NetLogin().doLogin(getContext(), info);
                 }
             }).setSuccessCallback(new HttpClientHelper.HttpCallback() {
                 @Override

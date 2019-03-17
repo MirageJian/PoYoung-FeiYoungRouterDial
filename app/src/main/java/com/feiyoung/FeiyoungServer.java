@@ -4,6 +4,7 @@ public class FeiyoungServer {
     public static final String HOST_URL = "http://58.53.199.144:8001";
     public static final String REDIRECT_URL = "http://100.64.0.1";
     public static final String TEST_CONNECT_URL = "http://baidu.com";
+    public static final String APK_BUILD_VERSION = "1.0.12";
 
     public static boolean sUseMobile = true;
     private static final String MOBILE_VERSION = "Maod";

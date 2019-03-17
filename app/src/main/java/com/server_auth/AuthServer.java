@@ -9,5 +9,5 @@ public class AuthServer {
 
     public static final String FILE_HOST = "https://holacodes.com/apis/static/file";
     public static String sApkName = "";
-    public static String sVersion = "2.0.5";
+    public static String sVersion = "2.1.0";
 }
