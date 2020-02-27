@@ -1,7 +1,5 @@
 package com.feiyoung;
 
-import android.content.Context;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -11,9 +9,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,40 +23,108 @@ public class NetLogin {
 
     public String doLogin(String... info) {
         // get login url
+        if (FeiyoungServer.sUseMobile)
+            checkVersion();
+        String attrUrl = getRedirectUrl();
+        if (FeiyoungServer.sUseMobile) {
+            testConnection(attrUrl);
+        }
         HashMap<String, String> authAttrs = new HashMap<>();
-        String loginUrl = getLoginUrl(authAttrs);
-        if (loginUrl == null) {
-            if (testConnection()) // 测试连通性
+        String[] urls = getLoginUrl(authAttrs, attrUrl);
+        if (urls == null) {
+            if (testConnection(FeiyoungServer.TEST_CONNECT_URL)) // 测试连通性
                 return FeiyoungServer.TEST_CONNECT_URL;
             return null;
         }
-        // 加密信息
+        String loginUrl = urls[0];
+        // 加密信息，用户名加上前缀
         String username = info[0];
         String key = DateEnum.getKeyByIndex(Calendar.getInstance().get(Calendar.DATE));
         if (key == null) return null;
         String password = EncryptionTool.encryptPassword(key, info[1]);
         // 处理AuthAttr
-        HashMap<String, String> paramsMap = AuthAtrrTool.returnLoginParams(username, password,unLinkParams(loginUrl), authAttrs);
+        HashMap<String, String> paramsMap = AuthAtrrTool.returnLoginParams(username, password, info[2],unLinkParams(loginUrl), authAttrs);
         System.out.println(paramsMap);
         System.out.println(authAttrs);
         // 登陆并取得登出信息
-        return getLogoutUrl(loginUrl, paramsMap);
+        return getLogoutUrl(loginUrl, paramsMap, AuthAtrrTool.returnSortParams(username, password, info[2],unLinkParams(loginUrl), authAttrs));
     }
-
-    private String getLoginUrl(HashMap<String, String> authAttrs) {
-        // 设置url
+    private void checkVersion() {
         String result = "";
         try {
+            URL url = new URL(FeiyoungServer.CHECK_VERSION_URL);//设置url
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+            connection.setRequestProperty("User-Agent", FeiyoungServer.OK_HTTP_UA);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setConnectTimeout(2_000);
+            connection.connect();
+            //字符流写入数据 //输出流，用来发送请求，http请求实际上直到这个函数里面才正式发送出去
+            OutputStream out = connection.getOutputStream();
+            //创建字符流对象并用高效缓冲流包装它，便获得最高的效率,发送的是字符串推荐用字符流，其它数据就用字节流
+            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
+            StringBuilder param = new StringBuilder();
+            param.append("CurrentVersion=");
+            param.append(FeiyoungServer.APK_BUILD_VERSION);
+            param.append("&LocalTime=");
+            param.append(URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date()), "UTF-8"));
+            param.append("&ClientType=1");
+            bw.write(param.toString());//把json字符串写入缓冲区中
+            bw.flush();//刷新缓冲区，把数据发送出去，这步很重要
+            bw.close();//使用完关闭
+            out.close();
+            BufferedReader inData = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream(), "UTF-8"
+            ));
+            String line = inData.readLine();//读取内容
+            while (line != null) {
+                result = result.concat(line);
+                line = inData.readLine();
+            }
+            inData.close();
+            System.out.println(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getRedirectUrl() {
+        try {
             // 设置url
-            URL url = new URL(FeiyoungServer.REDIRECT_URL);
+            URL url = new URL(FeiyoungServer.TEST_CONNECT_URL);
             // 打开链接
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty("User-Agent", FeiyoungServer.getAppUa());
-            connection.setRequestProperty("ClientVersion", FeiyoungServer.getAppVersion());
+            if (!FeiyoungServer.sUseMobile)
+                connection.setRequestProperty("ClientVersion", FeiyoungServer.getAppVersion());
             connection.setConnectTimeout(2_000);
+            connection.setInstanceFollowRedirects(false);
             connection.connect();
-            // 取得响应头
-            // 写入cookies
+            // 获取重定向地址
+            return connection.getHeaderField("Location");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private String[] getLoginUrl(HashMap<String, String> authAttrs, String attrUrl) {
+        // 设置url
+        String result = "";
+        String redirectUrl;
+        try {
+            // 设置url
+            URL url = new URL(attrUrl);
+            // 打开链接
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("User-Agent", FeiyoungServer.getAppUa());
+            if (!FeiyoungServer.sUseMobile)
+                connection.setRequestProperty("ClientVersion", FeiyoungServer.getAppVersion());
+            connection.setConnectTimeout(2_000);
+            connection.setInstanceFollowRedirects(false);
+            connection.connect();
+            // 取得响应头 写入cookies
             sCookies = connection.getHeaderField("Set-Cookie");
             // 获取数据的变量 //设置读取文件的编码格式和读取文件
             BufferedReader inData = new BufferedReader(new InputStreamReader(
@@ -78,13 +146,15 @@ public class NetLogin {
                 System.out.println(line);
             }
             inData.close();
+            // 获取重定向地址
+            redirectUrl = connection.getURL().toString();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
         Matcher matcher = Pattern.compile("<LoginURL><!\\[CDATA\\[([^]]+)]]").matcher(result);
         if (matcher.find()) {
-            return matcher.group(1);
+            return new String[]{matcher.group(1), redirectUrl};
         } else {
             Matcher matcher1 = Pattern.compile("<ReplyMessage>([^<]+)</ReplyMessage>").matcher(result);
             if (matcher1.find()) {
@@ -94,10 +164,11 @@ public class NetLogin {
         }
     }
 
-    private boolean testConnection() {
+    private boolean testConnection(String testUrl) {
         try {
-            URL url = new URL(FeiyoungServer.TEST_CONNECT_URL);
+            URL url = new URL(testUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("User-Agent", FeiyoungServer.OK_HTTP_UA);
             connection.connect();
             //获取数据的变量 //设置读取文件的编码格式和读取文件
             BufferedReader inData = new BufferedReader(new InputStreamReader(
@@ -118,8 +189,8 @@ public class NetLogin {
         }
     }
 
-    private String getLogoutUrl(String loginUrl,HashMap<String, String> paramsMap) {
-        String params = this.linkParams(paramsMap);
+    private String getLogoutUrl(String loginUrl,HashMap<String, String> paramsMap, String paramsString) {
+//        String params = this.linkParams(paramsMap);
         String result = "";
         try {
             URL url = new URL(loginUrl);//设置url
@@ -140,7 +211,7 @@ public class NetLogin {
             OutputStream out = connection.getOutputStream();
             //创建字符流对象并用高效缓冲流包装它，便获得最高的效率,发送的是字符串推荐用字符流，其它数据就用字节流
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(out));
-            bw.write(params);//把json字符串写入缓冲区中
+            bw.write(paramsString);//把json字符串写入缓冲区中
             bw.flush();//刷新缓冲区，把数据发送出去，这步很重要
             bw.close();//使用完关闭
             out.close();

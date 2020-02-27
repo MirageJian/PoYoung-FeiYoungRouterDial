@@ -29,6 +29,7 @@ public class LoginTab1Fragment extends Fragment {
     // UI references.
     private EditText mUsernameView;
     private EditText mPasswordView;
+    private EditText mGatewayMacView;
     private View mProgressView;
     private View mLoginFormView;
     private Switch mSwitch;
@@ -52,6 +53,7 @@ public class LoginTab1Fragment extends Fragment {
         mProgressView = view.findViewById(R.id.login_progress);
         mUsernameView = view.findViewById(R.id.email);
         mPasswordView = view.findViewById(R.id.password);
+        mGatewayMacView = view.findViewById(R.id.gatewayMac);
 //        mPasswordView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
 //            public void onFocusChange(View view, boolean b) {
@@ -100,6 +102,7 @@ public class LoginTab1Fragment extends Fragment {
         // Store values at the time of the login attempt.
         final String username = mUsernameView.getText().toString();
         final String password = mPasswordView.getText().toString();
+        final String gatewayMac = mGatewayMacView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -132,7 +135,7 @@ public class LoginTab1Fragment extends Fragment {
             new HttpClientHelper(new HttpClientHelper.CustomDoInBackground() {
                 @Override
                 public String getResult() {
-                    String[] info = {username, password};
+                    String[] info = {username, password, gatewayMac};
                     return new NetLogin().doLogin(info);
                 }
             }).setSuccessCallback(new HttpClientHelper.HttpCallback() {
@@ -191,6 +194,7 @@ public class LoginTab1Fragment extends Fragment {
         String username = mPreferences.getString("username", "");
         mUsernameView.setText(username);
         mPasswordView.setText(mPreferences.getString("password", ""));
+        mGatewayMacView.setText(mPreferences.getString("gatewayMac", ""));
         // 判断启动参数是否为空
         if (username.isEmpty()) {
             mUsernameView.setText(getActivity().getIntent().getStringExtra("username"));
@@ -204,10 +208,12 @@ public class LoginTab1Fragment extends Fragment {
     private void setPreferences() {
         // Store values at the time of the login attempt.
         String password = mPasswordView.getText().toString();
+        String gatewayMac = mGatewayMacView.getText().toString();
         boolean phoneMode = mSwitch.isChecked();
         // 设置保存密码参数
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString("password", password);
+        editor.putString("gatewayMac", gatewayMac);
         editor.putBoolean("phoneMode", phoneMode);
         editor.apply();
     }
