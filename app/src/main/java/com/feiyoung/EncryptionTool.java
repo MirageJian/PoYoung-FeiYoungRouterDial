@@ -38,7 +38,8 @@ class EncryptionTool {
 //        localStringBuilder.append(paramString1);
 //        localStringBuilder.append(" ,s=");
 //        localStringBuilder.append(paramString2);
-        return CustomMd5.getHexMd5(new EncryptionTool(toBytes(key)).obfuscate(password.getBytes()));
+        String md5String = CustomMd5.getHexMd5(new EncryptionTool(toBytes(key)).obfuscate(password.getBytes()));
+        return md5String.substring(8, 24);
     }
 
     static String decrypt2(String encryption) {
@@ -52,7 +53,7 @@ class EncryptionTool {
     static String encrypt2(String str) {
         String key = DateEnum2.getKeyByIndex(Calendar.getInstance().get(Calendar.DATE));
         if (key != null)
-            return Base64.encodeToString(new EncryptionTool(toBytes(key)).obfuscate(str.getBytes()), Base64.NO_WRAP);
+            return Base64.encodeToString(new EncryptionTool(toBytes(key)).obfuscate(str.getBytes()), Base64.NO_PADDING);
         else
             return null;
     }
@@ -69,10 +70,10 @@ class EncryptionTool {
             k = k + this.a[j] & 0xFF;
             int m = this.a[k];
             this.a[k] = this.a[j];
-            this.a[j] = ((byte)m);
-            int n = this.a[j];
-            m = this.a[k];
-            arrayOfByte[i] = ((byte)(this.a[(n + m & 0xFF)] ^ paramArrayOfByte[i]));
+            this.a[j] = (byte)m;
+            m = this.a[j];
+            int n = this.a[k];
+            arrayOfByte[i] = (byte)(this.a[(m + n & 0xFF)] ^ paramArrayOfByte[i]);
             i++;
         }
         return arrayOfByte;

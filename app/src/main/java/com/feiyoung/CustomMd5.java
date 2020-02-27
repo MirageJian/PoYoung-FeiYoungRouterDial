@@ -2,9 +2,9 @@ package com.feiyoung;
 
 import java.security.MessageDigest;
 
-public class CustomMd5
+class CustomMd5
 {
-    public static String getHexMd5(byte[] paramArrayOfByte)
+    static String getHexMd5(byte[] paramArrayOfByte)
     {
         try
         {
@@ -20,9 +20,9 @@ public class CustomMd5
     private static String toHex(byte[] paramArrayOfByte)
     {
         StringBuilder localStringBuilder = new StringBuilder();
-        for (int i = 0; i < paramArrayOfByte.length; i++)
+        for(byte paramByte: paramArrayOfByte)
         {
-            String str = Integer.toHexString(paramArrayOfByte[i] & 0xFF);
+            String str = Integer.toHexString(paramByte & 0xFF);
             Object localObject = str;
             if (str.length() == 1)
             {

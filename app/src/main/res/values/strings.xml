@@ -4,6 +4,7 @@
     <!-- Strings related to login -->
     <string name="prompt_email">上网账号</string>
     <string name="prompt_password">上网密码</string>
+    <string name="prompt_gateway_mac">网关MAC地址</string>
     <string name="action_sign_in">尝试拨号上网</string>
     <string name="action_sign_in_short">拨号</string>
     <string name="error_invalid_email">上网账号不正确</string>
